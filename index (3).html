@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Reefer | Cold Chain Control Tower</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js">
+</script>
+<style>
+:root {
+--bg:#f4f7fb;
+--card:#fff;
+--ink:#17263e;
+--muted:#68778d;
+--line:#e2e9f2;
+--navy:#142943;
+--blue:#326de6;
+--cyan:#21a9bd;
+--green:#16815f;
+--amber:#b97810;
+--red:#B91C1C;
+--shadow:0 8px 24px #233d5a0a}
+* {
+box-sizing:border-box}
+body {
+margin:0;
+background:var(--bg);
+color:var(--ink);
+font:14px/1.5 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+button,select,input {
+font:inherit}
+.app {
+min-height:100vh;
+display:grid;
+grid-template-columns:230px 1fr}
+aside {
+background:var(--navy);
+color:#dbe6f5;
+padding:24px 15px;
+display:flex;
+flex-direction:column;
+gap:25px}
+.brand {
+display:flex;
+align-items:center;
+gap:10px;
+padding:0 8px}
+.logo {
+width:38px;
+height:38px;
+border-radius:12px;
+background:linear-gradient(135deg,#39c6d2,#3972e8);
+display:grid;
+place-items:center;
+color:#fff;
+font-size:21px}
+.brand b {
+display:block;
+color:white;
+font-size:14px}
+.brand small {
+font-size:10px;
+color:#91a8c4;
+letter-spacing:.6px}
+.nav-label {
+font-size:10px;
+color:#839ab7;
+letter-spacing:1.4px;
+font-weight:800;
+padding:0 11px;
+margin-bottom:7px}
+nav {
+display:grid;
+gap:5px}
+nav button {
+border:0;
+background:transparent;
+color:#b8c7db;
+text-align:left;
+border-radius:9px;
+padding:11px 12px;
+cursor:pointer;
+font-size:13px}
+nav button.active,nav button:hover {
+background:#233d5b;
+color:white}
+.side-note {
+margin-top:auto;
+border:1px solid #304964;
+background:#192f49;
+padding:13px;
+border-radius:12px;
+font-size:11px;
+color:#a9bad0}
+.side-note b {
+color:#fff;
+display:block;
+margin-bottom:5px}
+main {
+min-width:0;
+padding:27px clamp(15px,3vw,36px) 40px}
+.top {
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+gap:18px;
+margin-bottom:20px}
+.eyebrow {
+font-size:10px;
+color:var(--blue);
+font-weight:800;
+letter-spacing:1.4px;
+text-transform:uppercase;
+margin-bottom:5px}
+h1 {
+font-size:clamp(24px,3vw,31px);
+line-height:1.2;
+margin:0 0 7px;
+letter-spacing:-.7px}
+.sub {
+color:var(--muted);
+font-size:12px;
+max-width:680px;
+margin:0}
+.buttons {
+display:flex;
+gap:8px;
+flex-wrap:wrap}
+.btn {
+border:1px solid var(--line);
+background:#fff;
+color:var(--ink);
+padding:9px 12px;
+border-radius:9px;
+cursor:pointer;
+font-size:12px;
+font-weight:750}
+.btn.primary {
+background:var(--blue);
+border-color:var(--blue);
+color:white}
+.btn:hover {
+filter:brightness(.98)}
+.notice {
+display:flex;
+gap:10px;
+background:#eef5ff;
+border:1px solid #d6e5ff;
+color:#315789;
+padding:11px 13px;
+border-radius:11px;
+font-size:11px;
+margin-bottom:17px}
+.notice b {
+color:#183e75}
+.notice.notice-danger {
+background:#FEE2E2;
+border:1px solid #B91C1C;
+color:#991B1B;
+font-weight:400;
+}
+.notice.notice-danger b {
+color:#7F1D1D;
+font-weight:800;
+}.notice.notice-warning {
+background:#fff8e8;
+border:1px solid #f0d28a;
+color:#805900}
+.notice.notice-success {
+background:#edf9f0;
+border:1px solid #b9e2c2;
+color:#216438}
+.page {
+display:none}
+.page.active {
+display:block}
+.grid {
+display:grid;
+gap:14px}
+.kpis {
+grid-template-columns:repeat(4,minmax(0,1fr));
+margin-bottom:15px}
+.card {
+background:var(--card);
+border:1px solid var(--line);
+border-radius:14px;
+box-shadow:var(--shadow);
+min-width:0}
+.kpi {
+padding:15px 16px}
+.kpi-label {
+font-size:11px;
+color:var(--muted);
+display:flex;
+justify-content:space-between;
+gap:6px}
+.kpi-value {
+font-size:26px;
+font-weight:850;
+letter-spacing:-.8px;
+margin:8px 0 2px}
+.kpi-foot {
+font-size:10px;
+color:var(--muted)}
+.two {
+grid-template-columns:minmax(0,1.55fr) minmax(260px,.9fr);
+margin-bottom:15px}
+.panel {
+padding:17px}
+.panel-head {
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+gap:10px;
+margin-bottom:13px}
+.panel h2 {
+font-size:14px;
+margin:0}
+.hint {
+font-size:10px;
+color:var(--muted);
+margin:4px 0 0}
+.tag {
+display:inline-flex;
+align-items:center;
+padding:4px 7px;
+border-radius:7px;
+font-size:10px;
+font-weight:800;
+white-space:nowrap}
+.blue {
+background:#edf3ff;
+color:#2d63c3}
+.green {
+background:#e6f7f0;
+color:#147754}
+.amber {
+background:#fff4dc;
+color:#94600b}
+.red {
+background:#FEE2E2;
+color:#991B1B;
+border:1px solid #B91C1C}
+.chart {
+height:260px;
+position:relative}
+.legend {
+display:flex;
+gap:12px;
+flex-wrap:wrap;
+font-size:10px;
+color:var(--muted);
+margin-top:8px}
+.legend span {
+display:flex;
+align-items:center;
+gap:5px}
+.line {
+height:3px;
+width:16px;
+display:inline-block;
+border-radius:2px}
+.picker {
+width:100%;
+border:1px solid var(--line);
+border-radius:9px;
+padding:10px;
+background:#fff;
+color:var(--ink);
+font-size:12px}
+.container-stack {
+display:grid;
+gap:8px;
+margin-top:10px}
+.container-row {
+padding:10px;
+border:1px solid var(--line);
+border-radius:10px;
+cursor:pointer}
+.container-row:hover,.container-row.selected {
+border-color:#8fb3ff;
+background:#f8faff}
+.rowtop,.rowbottom {
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:8px}
+.rowtop b {
+font-size:11px}
+.rowbottom {
+margin-top:6px;
+font-size:11px}
+.muted {
+color:var(--muted)}
+.riskbar {
+height:4px;
+background:#edf1f6;
+border-radius:8px;
+overflow:hidden;
+margin-top:8px}
+.riskbar i {
+display:block;
+height:100%}
+.table-wrap {
+overflow:auto}
+.table {
+width:100%;
+border-collapse:collapse;
+font-size:11px;
+min-width:540px}
+.table th {
+text-align:left;
+background:#f7f9fc;
+color:var(--muted);
+font-size:10px;
+padding:10px 9px;
+white-space:nowrap}
+.table td {
+padding:10px 9px;
+border-bottom:1px solid #edf1f6;
+vertical-align:middle}
+.table tr:last-child td {
+border-bottom:0}
+.lower {
+grid-template-columns:1.15fr 1fr}
+.actions {
+display:grid;
+gap:11px}
+.action {
+display:flex;
+gap:10px;
+align-items:flex-start}
+.num {
+width:27px;
+height:27px;
+border-radius:8px;
+background:#edf3ff;
+color:var(--blue);
+display:grid;
+place-items:center;
+font-weight:800;
+font-size:11px;
+flex-shrink:0}
+.action b {
+font-size:11px;
+display:block;
+margin-bottom:2px}
+.action p {
+font-size:10px;
+color:var(--muted);
+margin:0;
+line-height:1.5}
+.footnote {
+font-size:10px;
+color:var(--muted);
+line-height:1.6;
+margin-top:12px}
+.detail-grid {
+grid-template-columns:repeat(3,minmax(0,1fr));
+margin-bottom:14px}
+.metric {
+padding:15px}
+.metric span {
+display:block;
+color:var(--muted);
+font-size:11px}
+.metric strong {
+display:block;
+font-size:23px;
+margin-top:7px}
+.two-detail {
+grid-template-columns:1fr 1fr}
+.field {
+display:grid;
+gap:5px}
+.field label {
+font-size:10px;
+color:var(--muted);
+font-weight:800}
+.field select,.field input {
+padding:9px;
+border:1px solid var(--line);
+border-radius:8px;
+background:white;
+color:var(--ink)}
+.filters {
+display:flex;
+gap:9px;
+flex-wrap:wrap;
+margin-bottom:12px}
+.filters select,.filters input {
+border:1px solid var(--line);
+border-radius:8px;
+padding:9px;
+background:white;
+color:var(--ink);
+font-size:11px}
+.toast {
+position:fixed;
+right:20px;
+bottom:20px;
+background:#172b44;
+color:#fff;
+padding:12px 15px;
+border-radius:10px;
+font-size:12px;
+box-shadow:0 10px 30px #172b4433;
+opacity:0;
+transform:translateY(10px);
+transition:.2s;
+pointer-events:none;
+z-index:9}
+.toast.show {
+opacity:1;
+transform:none}
+.empty {
+padding:20px;
+text-align:center;
+color:var(--muted)}
+@media(max-width:1000px) {
+.kpis {
+grid-template-columns:repeat(2,1fr)}
+.two,.lower,.two-detail {
+grid-template-columns:1fr}
+}
+@media(max-width:680px) {
+.app {
+grid-template-columns:1fr}
+aside {
+padding:13px;
+gap:12px}
+.brand {
+padding:3px 6px}
+aside>div:nth-child(2) {
+display:block}
+nav {
+grid-template-columns:repeat(2,minmax(0,1fr))}
+nav button {
+padding:8px;
+font-size:11px}
+.nav-label {
+margin-bottom:4px}
+.side-note {
+display:none}
+main {
+padding:18px 12px 30px}
+.top {
+display:block}
+.buttons {
+margin-top:13px}
+.kpis {
+gap:8px}
+.kpi {
+padding:12px}
+.kpi-value {
+font-size:22px}
+.panel {
+padding:13px}
+.chart {
+height:230px}
+.detail-grid {
+grid-template-columns:1fr}
+.notice {
+font-size:10px}
+}
+
+.field input[type=range] {
+padding:0;
+border:0;
+background:transparent}
+.field input[type=tel],.field input[type=text] {
+width:100%}
+@media(max-width:680px) {
+.grid[style*=repeat\(2] {
+grid-template-columns:1fr!important}
+}
+
+/* Ẩn danh sách container dài, chỉ sử dụng ô chọn xổ xuống */
+.container-stack  {
+
+display: none !important;
+
+}
+
+.quality-panel {
+border-color:#d8e4f2;
+background:linear-gradient(180deg,#fff 0%,#fbfdff 100%)}
+.quality-grid {
+display:grid;
+grid-template-columns:repeat(4,minmax(0,1fr));
+gap:9px}
+.quality-metric {
+min-width:0;
+padding:13px 12px;
+border:1px solid var(--line);
+border-radius:11px;
+background:#f7f9fc}
+.quality-metric span {
+display:block;
+color:var(--muted);
+font-size:10px;
+font-weight:750;
+min-height:30px}
+.quality-metric strong {
+display:block;
+font-size:23px;
+line-height:1.25;
+letter-spacing:-.5px;
+margin:5px 0;
+color:var(--ink)}
+.quality-metric small {
+display:block;
+color:var(--muted);
+font-size:9px;
+line-height:1.4}
+.quality-metric.remaining {
+background:#edf5ff;
+border-color:#d7e6ff}
+.quality-metric.remaining strong,.quality-metric.remaining-days strong {
+color:var(--blue)}
+.quality-metric.remaining-days {
+background:#f0faf6;
+border-color:#d4eee2}
+.quality-metric.remaining-days strong {
+color:var(--green)}
+.quality-reference {
+margin-top:12px;
+padding:10px 12px;
+border-radius:9px;
+background:#f3f6fa;
+color:#43536a;
+font-size:11px}
+.quality-disclaimer {
+margin:10px 0 0;
+padding:10px 12px;
+border-left:3px solid var(--amber);
+border-radius:0 8px 8px 0;
+background:#fff9ec;
+color:#72551c;
+font-size:10px;
+line-height:1.55}
+@media(max-width:900px) {
+.quality-grid {
+grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:520px) {
+.quality-grid {
+grid-template-columns:1fr 1fr}
+.quality-metric strong {
+font-size:20px}
+}
+
+</style>
+</head>
+<body>
+<div class="app">
+<aside>
+<div class="brand">
+<div class="logo">❄</div>
+<div>
+<b>SMART REEFER</b>
+<small>COLD CHAIN CONTROL TOWER</small>
+</div>
+</div>
+<div>
+<div class="nav-label">QUẢN LÝ HỆ THỐNG</div>
+<nav>
+<button class="active" data-page="dashboard">▦　Tổng quan</button>
+<button data-page="detail">⌁　Chi tiết container</button>
+<button data-page="alerts">⚑　Quản lý cảnh báo</button>
+<button data-page="reports">▤　Báo cáo & lịch sử</button>
+</nav>
+</div>
+<div class="side-note">
+<b>● Chế độ mô phỏng</b>Dữ liệu minh họa, chưa kết nối cảm biến IoT thật. Mô hình Q10 chưa được kiểm định cho sản phẩm cụ thể.</div>
+</aside>
+<main>
+<header class="top">
+<div>
+<div class="eyebrow">IoT monitoring · Quality risk analytics</div>
+<h1>Cold Chain Control Tower</h1>
+<p class="sub">Theo dõi nhiệt độ container lạnh, phát hiện bất thường và hỗ trợ ưu tiên kiểm tra lô hàng tôm đông lạnh.</p>
+</div>
+<div class="buttons">
+<button class="btn" id="resetBtn">↻ Đặt lại demo</button>
+<button class="btn primary" id="simulateBtn">▶ Mô phỏng sự cố</button>
+</div>
+</header>
+<div class="notice">
+<span>ⓘ</span>
+<div>
+<b>Giới hạn demo:</b> dữ liệu nhiệt độ và cảnh báo là giả lập. Chỉ số Q10 là ước tính theo giả định, không phải phép đo trực tiếp chất lượng hoặc kết luận an toàn thực phẩm.</div>
+</div>
+
+<!-- TRANG 1: TỔNG QUAN -->
+<section id="dashboard" class="page active">
+<div class="grid kpis">
+<div class="card kpi">
+<div class="kpi-label">Container theo dõi <span>▤</span>
+</div>
+<div class="kpi-value" id="totalKpi">10</div>
+<div class="kpi-foot">Danh sách container mô phỏng</div>
+</div>
+<div class="card kpi">
+<div class="kpi-label">Nhiệt độ trung bình <span>♨</span>
+</div>
+<div class="kpi-value" id="avgKpi">−17.6°C</div>
+<div class="kpi-foot">Mục tiêu cài đặt: −18°C</div>
+</div>
+<div class="card kpi">
+<div class="kpi-label">Cần ưu tiên <span>⚑</span>
+</div>
+<div class="kpi-value" id="riskKpi">3</div>
+<div class="kpi-foot">Container mức trung bình/cao</div>
+</div>
+<div class="card kpi">
+<div class="kpi-label">Cảnh báo chưa xử lý <span>!</span>
+</div>
+<div class="kpi-value" id="alertKpi">2</div>
+<div class="kpi-foot">Theo nhật ký cảnh báo demo</div>
+</div>
+</div>
+<div class="card panel" style="margin-bottom:15px">
+<div class="panel-head">
+<div>
+<h2>Mô phỏng sự cố theo nhiệt độ và thời gian</h2>
+<p class="hint">Chọn container, điều chỉnh nhiệt độ và thời gian duy trì rồi áp dụng để cập nhật biểu đồ, cảnh báo và ước tính Q10.</p>
+</div>
+<span class="tag blue">Mô phỏng</span>
+</div>
+<div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr));gap:18px">
+<div class="field">
+<label>CONTAINER ĐANG CHỌN</label>
+<select id="simContainer" class="picker">
+</select>
+<label for="simTemp">NHIỆT ĐỘ MÔ PHỎNG: <b id="simTempValue">−18°C</b>
+</label>
+<input id="simTemp" type="range" min="-25" max="0" step="1" value="-18" style="width:100%;accent-color:var(--blue)">
+</div>
+<div class="field">
+<label for="simHours">THỜI GIAN DUY TRÌ: <b id="simHoursValue">5 giờ</b>
+</label>
+<input id="simHours" type="range" min="1" max="48" step="1" value="5" style="width:100%;accent-color:var(--blue)">
+<small class="muted">Thời gian giả định container duy trì ở nhiệt độ đã chọn.</small>
+<div class="buttons">
+<button class="btn primary" id="applySimulationBtn">Áp dụng mô phỏng</button>
+<button class="btn" id="resetSimulationBtn">Đặt lại −18°C</button>
+</div>
+</div>
+</div>
+<div id="simStatus" class="notice" style="margin:14px 0 0">Điều chỉnh nhiệt độ và thời gian để thử kịch bản.</div>
+<p class="footnote">Mô hình Q10 cộng dồn mức tiêu hao ước tính từ lịch sử mẫu và kịch bản mới. Đây là minh họa theo giả định, không phải phép đo chất lượng thực tế.</p>
+</div>
+<div class="grid two">
+<div class="card panel">
+<div class="panel-head">
+<div>
+<h2>Diễn biến nhiệt độ</h2>
+<p class="hint">Chọn container để xem thời điểm nhiệt độ thay đổi.</p>
+</div>
+<span class="tag blue" id="chartSelected">CONT-204</span>
+</div>
+<div class="chart">
+<canvas id="tempChart">
+</canvas>
+</div>
+<div class="legend">
+<span>
+<i class="line" style="background:#326de6">
+</i>Nhiệt độ ghi nhận</span>
+<span>
+<i class="line" style="background:#B91C1C">
+</i>Ngưỡng −15°C</span>
+<span>
+<i class="line" style="background:#21a9bd">
+</i>Mục tiêu −18°C</span>
+</div>
+</div>
+<div class="card panel">
+<div class="panel-head">
+<div>
+<h2>Đội container lạnh</h2>
+<p class="hint">Chọn container cần kiểm tra.</p>
+</div>
+<span class="tag green">10 mẫu</span>
+</div>
+<select class="picker" id="containerSelect" aria-label="Chọn container">
+</select>
+<div id="containerStack" class="container-stack">
+</div>
+</div>
+</div>
+<div class="grid lower">
+<div class="card panel">
+<div class="panel-head">
+<div>
+<h2>Container cần chú ý</h2>
+<p class="hint">Xếp hạng theo chỉ số rủi ro minh họa.</p>
+</div>
+<span class="tag amber">Ưu tiên xử lý</span>
+</div>
+<div class="table-wrap">
+<table class="table">
+<thead>
+<tr>
+<th>Container</th>
+<th>Nhiệt độ</th>
+<th>Phơi nhiễm*</th>
+<th>Mức độ</th>
+</tr>
+</thead>
+<tbody id="riskTable">
+</tbody>
+</table>
+</div>
+<p class="footnote">* Điểm phơi nhiễm là chỉ số quy ước của demo, không phải thang đo chất lượng đã được xác thực.</p>
+</div>
+<div class="card panel">
+<div class="panel-head">
+<div>
+<h2>Khuyến nghị hành động</h2>
+<p class="hint" id="recommendSubtitle">Dựa trên tình trạng container đang chọn.</p>
+</div>
+<span id="recommendTag" class="tag red">Cần xem xét</span>
+</div>
+<div id="recommendations" class="actions">
+</div>
+<div style="margin-top:14px">
+<button class="btn" id="goDetailBtn">Xem chi tiết</button>
+</div>
+</div>
+</div>
+</section>
+
+<!-- TRANG 2: CHI TIẾT CONTAINER -->
+<section id="detail" class="page">
+<div class="card panel" style="margin-bottom:14px">
+<div class="panel-head">
+<div>
+<h2>Chi tiết container và ước tính ảnh hưởng</h2>
+<p class="hint">Xem nhiệt độ, thời gian vượt ngưỡng và kết quả mô hình minh họa cho từng container.</p>
+</div>
+<span class="tag blue">Q10 demo</span>
+</div>
+<div class="field" style="max-width:360px">
+<label>CHỌN CONTAINER</label>
+<select id="detailSelect">
+</select>
+</div>
+</div>
+<div class="grid detail-grid">
+<div class="card metric">
+<span>Nhiệt độ hiện tại</span>
+<strong id="detailTemp">−12.0°C</strong>
+<small class="muted">Mục tiêu: −18°C</small>
+</div>
+<div class="card metric">
+<span>Thời gian vượt ngưỡng (ước tính)</span>
+<strong id="detailHours">3.0 giờ</strong>
+<small class="muted">Theo dữ liệu mô phỏng</small>
+</div>
+<div class="card metric">
+<span>Trạng thái rủi ro</span>
+<strong id="detailRisk">Cao</strong>
+<small class="muted" id="detailRoute">Tuyến vận chuyển</small>
+</div>
+</div>
+<div class="grid two-detail">
+<div class="card panel">
+<div class="panel-head">
+<div>
+<h2>Thông tin vận chuyển</h2>
+<p class="hint">Thông tin lô hàng và trạng thái thiết bị mô phỏng.</p>
+</div>
+</div>
+<div class="grid" style="grid-template-columns:1fr 1fr;gap:14px">
+<div class="field">
+<label>MÃ LÔ HÀNG</label>
+<input id="lotId" readonly>
+</div>
+<div class="field">
+<label>LOẠI HÀNG</label>
+<input id="cargoInfo" readonly>
+</div>
+<div class="field">
+<label>KẾT NỐI</label>
+<input id="connectionInfo" readonly>
+</div>
+<div class="field">
+<label>NGUỒN ĐIỆN / THIẾT BỊ</label>
+<input id="deviceInfo" readonly>
+</div>
+</div>
+</div>
+<div class="card panel quality-panel">
+<div class="panel-head">
+<div>
+<h2>Đánh giá chất lượng lô hàng</h2>
+<p class="hint">Ước tính mức tiêu hao thời hạn bảo quản quy đổi theo lịch sử nhiệt độ.</p>
+</div>
+<span class="tag blue">Q10 mô phỏng</span>
+</div>
+<div class="quality-grid">
+<div class="quality-metric">
+<span>Q10 giả định</span>
+<strong>3.0</strong>
+<small>Tăng 10°C → tốc độ quy đổi tăng 3 lần</small>
+</div>
+<div class="quality-metric">
+<span>Đã tiêu hao</span>
+<strong id="lifeUsed">16.7%</strong>
+<small>Phần thời hạn tham chiếu đã sử dụng</small>
+</div>
+<div class="quality-metric remaining">
+<span>Còn lại</span>
+<strong id="lifeRemainingPct">83.3%</strong>
+<small>Phần thời hạn tham chiếu còn lại</small>
+</div>
+<div class="quality-metric remaining-days">
+<span>Thời hạn tham chiếu còn lại</span>
+<strong id="lifeLeft">150 ngày</strong>
+<small>Tính trên mốc 180 ngày tại −18°C</small>
+</div>
+</div>
+<div class="quality-reference"><b>Mốc tham chiếu:</b> 180 ngày (khoảng 6 tháng) ở −18°C · <b>Thời gian bảo quản trước:</b> 30 ngày</div>
+<p class="quality-disclaimer" id="q10Note">Số liệu minh họa theo giả định Q10 = 3. Phần trăm tiêu hao là tỷ lệ tiêu hao thời hạn bảo quản quy đổi theo mô hình Q10, không phải phần trăm chất lượng thực tế của tôm đã mất đi. Cần hiệu chỉnh bằng dữ liệu thực nghiệm; không dùng kết quả này để quyết định hạn sử dụng hoặc an toàn thực phẩm.</p>
+</div>
+</div>
+</section>
+
+<!-- TRANG 3: QUẢN LÝ CẢNH BÁO -->
+<section id="alerts" class="page">
+<div class="card panel" style="margin-bottom:14px">
+<div class="panel-head">
+<div>
+<h2>Thông báo SMS tự động (mô phỏng)</h2>
+<p class="hint">Khi phát sinh cảnh báo đỏ, hệ thống tự tạo bản tin mô phỏng và ghi nhận trạng thái ngay tại đây.</p>
+</div>
+<span class="tag amber">Chế độ mô phỏng</span>
+</div>
+<div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+<div class="field">
+<label for="smsPhone">SỐ ĐIỆN THOẠI NGƯỜI NHẬN</label>
+<input id="smsPhone" type="tel" placeholder="Ví dụ: 09xxxxxxxx" value="">
+</div>
+<div class="field">
+<label for="smsRecipient">NGƯỜI NHẬN / BỘ PHẬN</label>
+<input id="smsRecipient" type="text" placeholder="Ví dụ: Nhân viên trực vận hành" value="Nhân viên trực vận hành">
+</div>
+</div>
+<div id="smsAutoStatus" class="notice" style="margin:14px 0 0">Chưa phát sinh SMS mô phỏng. Khi có cảnh báo đỏ, hệ thống sẽ tự tạo bản tin tại đây.</div>
+<div id="smsAutoMessage" class="footnote">Nội dung SMS sẽ hiển thị tại đây.</div>
+<p class="footnote">Lưu ý: “Đã gửi (mô phỏng)” chỉ là trạng thái minh họa trên website, không phải SMS thật. Muốn gửi tin nhắn thực tế cần tích hợp backend và SMS Gateway.</p>
+</div>
+<div class="card panel">
+<div class="panel-head">
+<div>
+<h2>Quản lý cảnh báo</h2>
+<p class="hint">Xem cảnh báo do hệ thống mô phỏng tự động tạo và cập nhật trạng thái xử lý.</p>
+</div>
+</div>
+<div class="filters">
+<select id="alertContainerFilter">
+<option value="all">Tất cả container</option>
+</select>
+<select id="alertPriorityFilter">
+<option value="all">Mọi mức độ</option>
+<option>Cao</option>
+<option>Trung bình</option>
+<option>Thấp</option>
+</select>
+<select id="alertStatusFilter">
+<option value="all">Mọi trạng thái</option>
+<option>Chưa xử lý</option>
+<option>Đang xử lý</option>
+<option>Đã xử lý</option>
+</select>
+</div>
+<div class="table-wrap">
+<table class="table">
+<thead>
+<tr>
+<th>Thời gian</th>
+<th>Container</th>
+<th>Nội dung cảnh báo</th>
+<th>Ưu tiên</th>
+<th>Trạng thái xử lý</th>
+</tr>
+</thead>
+<tbody id="alertsTable">
+</tbody>
+</table>
+</div>
+<p class="footnote">Trạng thái chỉ lưu trong phiên trình duyệt; làm mới trang sẽ khôi phục dữ liệu ban đầu.</p>
+</div>
+</section>
+
+<!-- TRANG 4: BÁO CÁO VÀ LỊCH SỬ -->
+<section id="reports" class="page">
+<div class="card panel">
+<div class="panel-head">
+<div>
+<h2>Báo cáo và lịch sử</h2>
+<p class="hint">Tra cứu bản ghi nhiệt độ và sự kiện cảnh báo, sau đó xuất CSV.</p>
+</div>
+<button class="btn primary" id="exportBtn">↓ Xuất CSV</button>
+</div>
+<div class="filters">
+<select id="reportContainerFilter">
+<option value="all">Tất cả container</option>
+</select>
+<select id="reportTypeFilter">
+<option value="all">Tất cả bản ghi</option>
+<option value="temperature">Nhiệt độ</option>
+<option value="alert">Cảnh báo</option>
+</select>
+<input type="date" id="dateFrom" aria-label="Từ ngày">
+<input type="date" id="dateTo" aria-label="Đến ngày">
+</div>
+<div class="table-wrap">
+<table class="table">
+<thead>
+<tr>
+<th>Thời gian</th>
+<th>Container</th>
+<th>Loại bản ghi</th>
+<th>Nội dung</th>
+<th>Kết quả / trạng thái</th>
+</tr>
+</thead>
+<tbody id="reportTable">
+</tbody>
+</table>
+</div>
+<p class="footnote">Lịch sử mô phỏng phục vụ minh họa chức năng truy xuất, không phải nhật ký vận hành thực tế.</p>
+</div>
+</section>
+</main>
+</div>
+<div id="toast" class="toast">
+</div>
+<script>
+// 1. Dữ liệu mẫu: 10 container dùng cho bản demo.
+const seed=[
+['CONT-204','Tôm đông lạnh · 18 tấn','Cát Lái → Yokohama',-12.0,7.8,3,'high',[-18,-18.1,-17.9,-18,-17.8,-17.9,-17.7,-17.8,-17.6,-17.5,-16.8,-15.9,-14.8,-13.5,-12.7,-12]],
+['CONT-118','Tôm đông lạnh · 20 tấn','Cát Lái → Osaka',-15.8,3.2,1.5,'medium',[-18,-18,-18.1,-17.9,-18,-17.8,-17.9,-17.8,-17.7,-17.8,-17.5,-17,-16.5,-15.8,-15.4,-15.8]],
+['CONT-073','Tôm đông lạnh · 16 tấn','Cát Lái → Kobe',-18.1,.2,0,'low',[-18,-18.1,-18,-18.2,-18.1,-18,-18.1,-18,-18.2,-18.1,-18,-18.1,-18.2,-18.1,-18,-18.1]],
+['CONT-091','Tôm đông lạnh · 19 tấn','Cát Lái → Busan',-17.8,.5,0,'low',[-18,-18.1,-18,-17.9,-18,-17.8,-18,-17.9,-17.8,-17.9,-17.8,-17.7,-17.9,-17.8,-17.9,-17.8]],
+['CONT-132','Tôm đông lạnh · 21 tấn','Cát Lái → Shanghai',-16.9,2.1,.5,'medium',[-18,-18,-18.1,-18,-17.9,-17.8,-17.9,-17.7,-17.6,-17.4,-17.2,-17,-16.8,-16.7,-16.9,-16.9]],
+['CONT-156','Tôm đông lạnh · 17 tấn','Cát Lái → Nagoya',-18.2,.1,0,'low',[-18,-18.1,-18.2,-18.1,-18.2,-18,-18.1,-18.2,-18.1,-18,-18.1,-18.2,-18.1,-18.2,-18.1,-18.2]],
+['CONT-187','Tôm đông lạnh · 18 tấn','Cát Lái → Kobe',-14.9,5.4,2,'high',[-18,-18,-17.9,-18,-17.8,-17.7,-17.5,-17.2,-16.8,-16.2,-15.8,-15.4,-15.1,-14.9,-14.8,-14.9]],
+['CONT-219','Tôm đông lạnh · 15 tấn','Cát Lái → Osaka',-17.6,.7,0,'low',[-18,-18.1,-18,-18,-17.9,-18,-17.8,-17.9,-17.8,-17.7,-17.8,-17.7,-17.6,-17.7,-17.6,-17.6]],
+['CONT-245','Tôm đông lạnh · 20 tấn','Cát Lái → Yokohama',-15.4,4.1,1,'medium',[-18,-18,-18.1,-18,-17.9,-17.8,-17.7,-17.5,-17.2,-16.8,-16.4,-16,-15.7,-15.5,-15.4,-15.4]],
+['CONT-271','Tôm đông lạnh · 16 tấn','Cát Lái → Busan',-18,.2,0,'low',[-18,-18.1,-18,-17.9,-18,-18.1,-18,-17.9,-18,-18.1,-18,-18,-18.1,-18,-18.1,-18]],
+];
+// Mốc thời gian hiển thị trên biểu đồ nhiệt độ.
+const labels=['27/10 08:00','27/10 10:00','27/10 12:00','27/10 14:00','27/10 16:00','27/10 18:00','27/10 20:00','27/10 22:00','28/10 00:00','28/10 02:00','28/10 04:00','28/10 06:00','28/10 08:00','28/10 10:00','28/10 12:00','28/10 14:00'];
+// Biến trạng thái chung của website.
+let data, selected='CONT-204', chart, reportRows=[];const activeIncidents=new Set();const $=id=>document.getElementById(id);const fmt=t=>(t<0?'−':'')+Math.abs(t).toFixed(1)+'°C';const riskName=r=>r==='high'?'Cao':r==='medium'?'Trung bình':'Thấp';const riskClass=r=>r==='high'?'red':r==='medium'?'amber':'green';const clone=x=>JSON.parse(JSON.stringify(x));
+// Nhật ký cảnh báo mẫu; cảnh báo mới được sinh khi áp dụng mô phỏng vượt ngưỡng.
+let alerts=[{time:'2026-10-28 08:00',id:'CONT-204',type:'Nhiệt độ vượt ngưỡng −15°C',priority:'Cao',status:'Chưa xử lý'},{time:'2026-10-28 06:00',id:'CONT-187',type:'Nhiệt độ tăng bất thường',priority:'Cao',status:'Đang xử lý'},{time:'2026-10-27 22:00',id:'CONT-118',type:'Nhiệt độ lệch mục tiêu',priority:'Trung bình',status:'Đã xử lý'},{time:'2026-10-27 20:00',id:'CONT-245',type:'Tiến gần ngưỡng cảnh báo',priority:'Trung bình',status:'Chưa xử lý'}];let baseAlerts=clone(alerts);
+// 2. Hàm tiện ích và hàm nạp danh sách container vào các ô chọn.
+function toast(msg){$('toast').textContent=msg;
+$('toast').classList.add('show');clearTimeout(window.tt);window.tt=setTimeout(()=>$('toast').classList.remove('show'),2800)}
+
+function get(){return data.find(c=>c[0]===selected)||data[0]}
+
+function populate(){['containerSelect','detailSelect','alertContainerFilter','reportContainerFilter','simContainer'].forEach(id=>{let el=$(id),val=el.value;el.innerHTML=(id.includes('Filter')?'<option value="all">'+(id==='alertContainerFilter'?'Tất cả container':'Tất cả container')+'</option>':'')+data.map(c=>`<option value="${c[0]}">${c[0]}</option>`).join('');if([...el.options].some(o=>o.value===val))el.value=val;});
+$('containerSelect').value=selected;
+$('detailSelect').value=selected;if($('simContainer'))$('simContainer').value=selected}
+// 3. Các hàm hiển thị Dashboard, biểu đồ và thông tin chi tiết.
+function renderChart(){const c=get();
+$('chartSelected').textContent=c[0];if(chart)chart.destroy();chart=new Chart($('tempChart'),{type:'line',data:{labels,datasets:[{label:'Nhiệt độ ghi nhận',data:c[7],borderColor:'#326de6',backgroundColor:'rgba(50,109,230,.08)',fill:true,tension:.28,borderWidth:2.5,pointRadius:2},{label:'Ngưỡng cảnh báo −15°C',data:labels.map(()=>-15),borderColor:'#B91C1C',borderDash:[6,5],pointRadius:0,borderWidth:1.5},{label:'Mục tiêu −18°C',data:labels.map(()=>-18),borderColor:'#21a9bd',borderDash:[3,4],pointRadius:0,borderWidth:1.5}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{callbacks:{label:x=>x.dataset.label+': '+fmt(x.parsed.y)}}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:7,maxRotation:0,font:{size:9}}},y:{min:-20,max:-10,ticks:{callback:v=>v+'°C',font:{size:10}}}}}})}
+function renderRecs(){const c=get(),r=c[6];
+$('recommendTag').className='tag '+riskClass(r);
+$('recommendTag').textContent=r==='high'?'Cần xem xét':r==='medium'?'Theo dõi sát':'Ổn định';
+$('recommendSubtitle').textContent='Khuyến nghị cho '+c[0];let list=r==='high'?[['1','Ưu tiên kiểm tra container','Xác minh lịch sử nhiệt độ, thời lượng sự cố và tình trạng thiết bị.'],['2','Đối chiếu điều kiện sản phẩm','Kiểm tra nhiệt độ sản phẩm và hồ sơ bàn giao theo quy trình.'],['3','Chuyển QA/QC đánh giá','Không tự động kết luận lô hàng hư hỏng từ chỉ số mô phỏng.']]:r==='medium'?[['1','Theo dõi sát diễn biến','Kiểm tra xem nhiệt độ có tiếp tục tăng hoặc vượt ngưỡng không.'],['2','Rà soát nhật ký vận chuyển','Đối chiếu thời gian bất thường với tình trạng nguồn điện và thiết bị.'],['3','Chuyển đánh giá khi cần','Báo QA/QC nếu sự cố kéo dài hoặc có thêm dấu hiệu bất thường.']]:[['1','Tiếp tục giám sát định kỳ','Nhiệt độ hiện tại gần mức mục tiêu mô phỏng.'],['2','Duy trì hồ sơ truy xuất','Lưu lịch sử để đối chiếu nếu có sự cố phát sinh.'],['3','Không bỏ qua kiểm tra chất lượng','Chỉ số thấp không thay thế quy trình kiểm soát thực tế.']];
+$('recommendations').innerHTML=list.map(x=>`<div class="action"><div class="num">${x[0]}</div><div><b>${x[1]}</b><p>${x[2]}</p></div></div>`).join('')}
+function render(){let avg=data.reduce((s,c)=>s+c[3],0)/data.length;
+$('totalKpi').textContent=data.length;
+$('avgKpi').textContent=fmt(avg);
+$('riskKpi').textContent=data.filter(c=>c[6]!=='low').length;
+$('alertKpi').textContent=alerts.filter(a=>a.status!=='Đã xử lý').length;let order=[...data].sort((a,b)=>b[4]-a[4]);
+$('containerStack').innerHTML=data.map(c=>`<div class="container-row ${c[0]===selected?'selected':''}" data-id="${c[0]}"><div class="rowtop"><b>${c[0]}</b><span class="tag ${riskClass(c[6])}">${riskName(c[6])}</span></div><div class="rowbottom"><span class="muted">Nhiệt độ hiện tại</span><b>${fmt(c[3])}</b></div><div class="riskbar"><i style="width:${Math.min(100,c[4]/8*100)}%;background:${c[6]==='high'?'var(--red)':c[6]==='medium'?'var(--amber)':'var(--green)'}"></i></div></div>`).join('');
+document.querySelectorAll('.container-row').forEach(el=>el.onclick=()=>{selected=el.dataset.id;sync();});
+$('riskTable').innerHTML=order.slice(0,6).map(c=>`<tr><td><b>${c[0]}</b></td><td>${fmt(c[3])}</td><td>${c[4].toFixed(1)} điểm</td><td><span class="tag ${riskClass(c[6])}">${riskName(c[6])}</span></td></tr>`).join('');renderChart();renderRecs();renderDetail()}
+function renderDetail(){let c=data.find(x=>x[0]===$('detailSelect').value)||get();
+$('detailTemp').textContent=fmt(c[3]);
+$('detailHours').textContent=c[5].toFixed(1)+' giờ';
+$('detailRisk').textContent=riskName(c[6]);
+$('detailRoute').textContent=c[2];
+$('lotId').value='LOT-'+c[0].replace('CONT-','');
+$('cargoInfo').value=c[1];
+$('connectionInfo').value=c[0]==='CONT-336'?'Mất kết nối (mô phỏng)':'Online (mô phỏng)';
+$('deviceInfo').value=c[0]==='CONT-336'?'Cần kiểm tra':'Đang cấp điện';
+// Q10: quy đổi lịch sử nhiệt độ sang số ngày tiêu hao ở điều kiện tham chiếu -18°C.
+// Mỗi điểm lịch sử đại diện 2 giờ; điểm cuối dành cho nhiệt độ mô phỏng hiện tại,
+// vì vậy chỉ cộng 15 điểm lịch sử để tránh tính trùng với thời gian mô phỏng.
+let q=3,shelf=180,elapsed=30,historyEquivalentDays=0;
+for(const historicalTemp of c[7].slice(0,-1)){
+  historyEquivalentDays+=(2/24)*Math.pow(q,(historicalTemp+18)/10);
+}
+// c[8] lưu riêng số ngày tiêu hao quy đổi tích lũy từ các lần mô phỏng của container này.
+const simulationEquivalentDays=c[8]||0;
+const totalAge=elapsed+historyEquivalentDays+simulationEquivalentDays;
+const used=Math.min(100,totalAge/shelf*100);
+const remainingPct=Math.max(0,100-used);
+const remainingDays=Math.max(0,shelf-totalAge);
+$('lifeUsed').textContent=used.toFixed(1)+'%';
+$('lifeRemainingPct').textContent=remainingPct.toFixed(1)+'%';
+$('lifeLeft').textContent=remainingDays.toFixed(0)+' ngày';
+$('q10Note').textContent=`Số liệu minh họa theo Q10=${q}; mốc tham chiếu ${shelf} ngày tại −18°C; đã bảo quản trước ${elapsed} ngày. Kết quả cộng thêm lịch sử nhiệt độ và thời gian mô phỏng của container. Tỷ lệ này là mức tiêu hao thời hạn bảo quản quy đổi, không phải phần trăm chất lượng thực tế đã mất. Cần hiệu chỉnh bằng dữ liệu thực nghiệm; không dùng để quyết định hạn sử dụng hoặc an toàn thực phẩm.`}
+// 4. Quản lý cảnh báo: xem, lọc và cập nhật trạng thái xử lý.
+function renderAlerts(){let fc=$('alertContainerFilter').value,fp=$('alertPriorityFilter').value,fs=$('alertStatusFilter').value;let rows=alerts.filter(a=>(fc==='all'||a.id===fc)&&(fp==='all'||a.priority===fp)&&(fs==='all'||a.status===fs));
+$('alertsTable').innerHTML=rows.length?rows.map(a=>`<tr><td>${a.time}</td><td><b>${a.id}</b></td><td>${a.type}</td><td><span class="tag ${riskClass(a.priority==='Cao'?'high':a.priority==='Trung bình'?'medium':'low')}">${a.priority}</span></td><td><select class="statusChange" data-key="${alerts.indexOf(a)}"><option ${a.status==='Chưa xử lý'?'selected':''}>Chưa xử lý</option><option ${a.status==='Đang xử lý'?'selected':''}>Đang xử lý</option><option ${a.status==='Đã xử lý'?'selected':''}>Đã xử lý</option></select></td></tr>`).join(''):'<tr><td colspan="5" class="empty">Không có cảnh báo phù hợp bộ lọc.</td></tr>';
+document.querySelectorAll('.statusChange').forEach(el=>el.onchange=()=>{alerts[+el.dataset.key].status=el.value;renderAlerts();renderReports();render();toast('Đã cập nhật trạng thái cảnh báo trong phiên demo.')})}
+function renderReports(){let fc=$('reportContainerFilter').value,ft=$('reportTypeFilter').value,from=$('dateFrom').value,to=$('dateTo').value;let rows=[];data.filter(c=>fc==='all'||c[0]===fc).forEach(c=>c[7].forEach((t,i)=>rows.push({time:labels[i],date:i<8?'2026-10-27':'2026-10-28',id:c[0],type:'temperature',kind:'Nhiệt độ',content:'Nhiệt độ '+fmt(t),result:t>-15?'Vượt ngưỡng':t>-18?'Lệch mục tiêu':'Trong vùng mục tiêu'})));alerts.filter(a=>fc==='all'||a.id===fc).forEach(a=>rows.push({time:a.time,date:a.time.slice(0,10),id:a.id,type:'alert',kind:'Cảnh báo',content:a.type,result:a.status}));rows=rows.filter(r=>(ft==='all'||r.type===ft)&&(!from||r.date>=from)&&(!to||r.date<=to));reportRows=rows;
+$('reportTable').innerHTML=rows.slice(0,150).map(r=>`<tr><td>${r.time}</td><td>${r.id}</td><td>${r.kind}</td><td>${r.content}</td><td>${r.result}</td></tr>`).join('')||'<tr><td colspan="5" class="empty">Không có dữ liệu phù hợp bộ lọc.</td></tr>'}
+function sync(){
+// Đồng bộ cùng một container trên tất cả các ô chọn và các khu vực hiển thị.
+['containerSelect','detailSelect','simContainer'].forEach(id=>{
+  const el=$(id);
+  if(el && [...el.options].some(option=>option.value===selected)) el.value=selected;
+});
+render();renderAlerts();renderReports();
+}
+// 5. Mô phỏng nhiệt độ/thời gian; tự tạo cảnh báo khi vượt ngưỡng −15°C.
+function setSimulationNotice(message, level){
+const box=$('simStatus');
+box.className='notice '+(level==='danger'?'notice-danger':level==='warning'?'notice-warning':'notice-success');
+box.innerHTML=message;
+}
+function showMockSms(container, temp, hours, time){
+const phone=$('smsPhone').value.trim()||'Chưa cấu hình số điện thoại';
+const recipient=$('smsRecipient').value.trim()||'Người phụ trách';
+const message=`SMART REEFER - CANH BAO DO: ${container[0]} ghi nhan ${temp}°C, vuot nguong -15°C trong ${hours} gio. Thoi diem: ${time}. De nghi kiem tra he thong lam lanh va danh gia lo hang.`;
+$('smsAutoStatus').className='notice notice-danger';
+$('smsAutoStatus').innerHTML=`<b>Đã tạo SMS tự động (mô phỏng)</b><br>Người nhận: ${recipient}<br>Số điện thoại: ${phone}<br>Trạng thái: <b>Đã gửi (mô phỏng)</b> · ${time}`;
+$('smsAutoMessage').textContent='Nội dung: '+message;
+}
+function applySimulation(){
+// Đọc trực tiếp container đang chọn; không dùng mã container mặc định.
+const id=$('simContainer').value;
+const c=data.find(x=>x[0]===id);
+if(!c){toast('Không tìm thấy container được chọn. Vui lòng chọn lại.');return;}
+selected=id;
+const temp=Number($('simTemp').value),hours=Number($('simHours').value);
+const now=new Date();
+const time=now.toLocaleString('sv-SE').slice(0,16);
+c[3]=temp;c[5]=hours;
+c[6]=temp>-15?'high':temp>-18?'medium':'low';
+c[4]=Math.max(0,(temp+18)*0.8+hours*0.08);
+c[7]=c[7].slice(0,-1).concat([temp]);
+// Lưu mức tiêu hao quy đổi theo NGÀY, riêng cho container đang mô phỏng.
+// Q10=3: tăng 10°C làm tốc độ suy giảm giả định tăng 3 lần.
+const q10=3;
+const equivalentDays=(hours/24)*Math.pow(q10,(temp+18)/10);
+c[8]=(c[8]||0)+equivalentDays;
+if(temp>-15){
+  // Chỉ tạo một cảnh báo/SMS cho mỗi sự cố đang diễn ra trên từng container.
+  if(!activeIncidents.has(id)){
+    activeIncidents.add(id);
+    alerts.unshift({time,id,type:`Nhiệt độ ${temp}°C trong ${hours} giờ, vượt ngưỡng −15°C`,priority:'Cao',status:'Chưa xử lý'});
+    showMockSms(c,temp,hours,time);
+  }else{
+    $('smsAutoStatus').className='notice notice-danger';
+    $('smsAutoStatus').textContent=`Sự cố của ${id} vẫn đang diễn ra. SMS đã được tạo trước đó; hệ thống không gửi lặp.`;
+  }
+  setSimulationNotice(`<strong style="color:#FF0000;font-weight:900">CẢNH BÁO NGHIÊM TRỌNG</strong> : ${id} đang ở ${temp}°C trong ${hours} giờ, vượt ngưỡng −15°C. Đã ghi nhận cảnh báo và tạo SMS mô phỏng tự động. Kiểm tra hệ thống làm lạnh và chuyển QA/QC đánh giá.`, 'danger');
+}else if(temp>-18){
+  // Rời trạng thái đỏ; lần vượt ngưỡng tiếp theo sẽ được xem là sự cố mới.
+  activeIncidents.delete(id);
+  setSimulationNotice(`CẢNH BÁO VÀNG: ${id} đang ở ${temp}°C trong ${hours} giờ. Nhiệt độ cao hơn mục tiêu −18°C nhưng chưa vượt ngưỡng đỏ −15°C. Cần theo dõi sát.`, 'warning');
+}else{
+  activeIncidents.delete(id);
+  setSimulationNotice(`${id} đang ở ${temp}°C trong ${hours} giờ; nằm trong vùng mục tiêu mô phỏng.`, 'success');
+}
+// Đồng bộ các trang và ô chọn theo đúng container vừa mô phỏng.
+sync();
+$('simContainer').value=id;$('containerSelect').value=id;$('detailSelect').value=id;
+if(document.getElementById('alerts').classList.contains('active'))renderAlerts();
+toast('Đã áp dụng mô phỏng cho '+id+' ('+temp+'°C / '+hours+' giờ).');
+}
+// 6. Gắn sự kiện cho các nút và ô chọn.
+$('simContainer').onchange=e=>{selected=e.target.value;sync();};
+$('simTemp').oninput=e=>$('simTempValue').textContent=e.target.value+'°C';
+$('simHours').oninput=e=>$('simHoursValue').textContent=e.target.value+' giờ';
+$('applySimulationBtn').onclick=applySimulation;
+$('resetSimulationBtn').onclick=()=>{$('simTemp').value=-18;
+$('simHours').value=5;
+$('simTempValue').textContent='−18°C';
+$('simHoursValue').textContent='5 giờ';applySimulation();};
+// SMS được tạo tự động ở chế độ mô phỏng bên trong applySimulation().
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x===b));
+document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===b.dataset.page));if(b.dataset.page==='alerts')renderAlerts();if(b.dataset.page==='reports')renderReports()});
+$('containerSelect').onchange=e=>{selected=e.target.value;sync()};
+$('detailSelect').onchange=renderDetail;['alertContainerFilter','alertPriorityFilter','alertStatusFilter'].forEach(id=>$(id).onchange=renderAlerts);['reportContainerFilter','reportTypeFilter','dateFrom','dateTo'].forEach(id=>$(id).onchange=renderReports);
+$('goDetailBtn').onclick=()=>document.querySelector('[data-page="detail"]').click();
+$('simulateBtn').onclick=()=>{document.querySelector('[data-page=\"dashboard\"]').click();
+$('simTemp').value=-12;
+$('simHours').value=5;
+$('simTempValue').textContent='−12°C';
+$('simHoursValue').textContent='5 giờ';applySimulation();};
+$('resetBtn').onclick=()=>{data=clone(seed);alerts=clone(baseAlerts);activeIncidents.clear();$('smsAutoStatus').className='notice';$('smsAutoStatus').textContent='Chưa phát sinh SMS mô phỏng. Khi có cảnh báo đỏ, hệ thống sẽ tự tạo bản tin tại đây.';$('smsAutoMessage').textContent='Nội dung SMS sẽ hiển thị tại đây.';selected='CONT-204';
+$('simTemp').value=-18;
+$('simHours').value=5;
+$('simTempValue').textContent='−18°C';
+$('simHoursValue').textContent='5 giờ';populate();sync();toast('Đã đặt lại dữ liệu demo.')};
+$('exportBtn').onclick=()=>{let rows=[['Thời gian','Container','Loại bản ghi','Nội dung','Kết quả / trạng thái'],...reportRows.map(r=>[r.time,r.id,r.kind,r.content,r.result])];let csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');let blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='smart-reefer-report.csv';a.click();URL.revokeObjectURL(url);toast('Đã xuất báo cáo CSV theo bộ lọc hiện tại.')};
+data=clone(seed);populate();
+$('simContainer').value=selected;sync();
+</script></body></html>
